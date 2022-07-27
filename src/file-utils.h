@@ -102,8 +102,6 @@ gboolean 	    is_program_available	 (const char *filename,
 const char *        get_home_uri                 (void);
 GFile *             get_user_config_subdirectory (const char *child_name,
 						  gboolean    create_);
-int                 uricmp                       (const char *uri1,
-						  const char *uri2);
 char *              get_alternative_uri          (const char *folder,
 	     					  const char *name);
 char *              get_alternative_uri_for_uri  (const char *uri);

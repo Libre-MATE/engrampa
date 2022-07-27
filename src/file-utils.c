@@ -1032,13 +1032,6 @@ get_user_config_subdirectory (const char *child_name,
 	return file;
 }
 
-int
-uricmp (const char *uri1,
-	const char *uri2)
-{
-	return g_strcmp0 (uri1, uri2);
-}
-
 char *
 get_alternative_uri (const char *folder,
 	     const char *name)
