@@ -17,54 +17,52 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301
+ * USA.
  */
 
-#include <string.h>
-#include "typedefs.h"
 #include "preferences.h"
-#include "fr-init.h"
+
+#include <string.h>
+
 #include "file-utils.h"
+#include "fr-init.h"
 #include "fr-window.h"
+#include "typedefs.h"
 
-void
-pref_util_save_window_geometry (GtkWindow  *window,
-				const char *dialog_id)
-{
-	char *schema;
-	GSettings *settings;
-	int width;
-	int height;
+void pref_util_save_window_geometry(GtkWindow *window, const char *dialog_id) {
+  char *schema;
+  GSettings *settings;
+  int width;
+  int height;
 
-	schema = g_strconcat (ENGRAMPA_SCHEMA_DIALOGS, ".", dialog_id, NULL);
-	settings = g_settings_new (schema);
+  schema = g_strconcat(ENGRAMPA_SCHEMA_DIALOGS, ".", dialog_id, NULL);
+  settings = g_settings_new(schema);
 
-	gtk_window_get_size (window, &width, &height);
-	g_settings_set_int (settings, "width", width);
-	g_settings_set_int (settings, "height", height);
-	g_object_unref (settings);
-	g_free (schema);
+  gtk_window_get_size(window, &width, &height);
+  g_settings_set_int(settings, "width", width);
+  g_settings_set_int(settings, "height", height);
+  g_object_unref(settings);
+  g_free(schema);
 }
 
-void
-pref_util_restore_window_geometry (GtkWindow  *window,
-				   const char *dialog_id)
-{
-	char *schema;
-	GSettings *settings;
-	int width;
-	int height;
+void pref_util_restore_window_geometry(GtkWindow *window,
+                                       const char *dialog_id) {
+  char *schema;
+  GSettings *settings;
+  int width;
+  int height;
 
-	schema = g_strconcat (ENGRAMPA_SCHEMA_DIALOGS, ".", dialog_id, NULL);
-	settings = g_settings_new (schema);
+  schema = g_strconcat(ENGRAMPA_SCHEMA_DIALOGS, ".", dialog_id, NULL);
+  settings = g_settings_new(schema);
 
-	width = g_settings_get_int (settings, "width");
-	height = g_settings_get_int (settings, "height");
-	if ((width != -1) && (height != 1))
-		gtk_window_set_default_size (window, width, height);
+  width = g_settings_get_int(settings, "width");
+  height = g_settings_get_int(settings, "height");
+  if ((width != -1) && (height != 1))
+    gtk_window_set_default_size(window, width, height);
 
-	gtk_window_present (window);
+  gtk_window_present(window);
 
-	g_object_unref (settings);
-	g_free (schema);
+  g_object_unref(settings);
+  g_free(schema);
 }

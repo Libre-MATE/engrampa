@@ -17,27 +17,28 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301
+ * USA.
  */
 
 #define _XOPEN_SOURCE /* strptime */
 
+#include "fr-command-ar.h"
+
+#include <glib.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
-#include <glib.h>
-
 #include "file-data.h"
 #include "file-utils.h"
 #include "fr-command.h"
-#include "fr-command-ar.h"
 
 #define LS_AR_DATE_FORMAT "%b %e %H:%M %Y"
 
-static void fr_command_ar_class_init  (FrCommandArClass *class);
-static void fr_command_ar_init        (FrCommand        *afile);
-static void fr_command_ar_finalize    (GObject          *object);
+static void fr_command_ar_class_init(FrCommandArClass *class);
+static void fr_command_ar_init(FrCommand *afile);
+static void fr_command_ar_finalize(GObject *object);
 
 /* Parent Class */
 
@@ -45,269 +46,224 @@ static FrCommandClass *parent_class = NULL;
 
 /* -- list -- */
 
-static time_t
-mktime_from_string (const char  *time_s,
-                    int          index,
-                    char       **end)
-{
-        struct tm tm = {0, };
-        char *p;
+static time_t mktime_from_string(const char *time_s, int index, char **end) {
+  struct tm tm = {
+      0,
+  };
+  char *p;
 
-        tm.tm_isdst = -1;
-        p = strptime (time_s + index, LS_AR_DATE_FORMAT, &tm);
-        if (p != NULL)
-                *end = p + 1;
-        return mktime (&tm);
+  tm.tm_isdst = -1;
+  p = strptime(time_s + index, LS_AR_DATE_FORMAT, &tm);
+  if (p != NULL) *end = p + 1;
+  return mktime(&tm);
 }
 
-static void
-process_line (char     *line,
-	      gpointer  data)
-{
-	FileData    *fdata;
-	FrCommand   *comm = FR_COMMAND (data);
-	char       **fields;
-	int          date_idx;
-	char        *field_size;
-	char        *field_name = NULL;
+static void process_line(char *line, gpointer data) {
+  FileData *fdata;
+  FrCommand *comm = FR_COMMAND(data);
+  char **fields;
+  int date_idx;
+  char *field_size;
+  char *field_name = NULL;
 
-	g_return_if_fail (line != NULL);
+  g_return_if_fail(line != NULL);
 
-	fdata = file_data_new ();
+  fdata = file_data_new();
 
-	date_idx = file_list__get_index_from_pattern (line, "%c%c%c %a%n %n%n:%n%n %n%n%n%n");
+  date_idx =
+      file_list__get_index_from_pattern(line, "%c%c%c %a%n %n%n:%n%n %n%n%n%n");
 
-	field_size = file_list__get_prev_field (line, date_idx, 1);
-	fdata->size = g_ascii_strtoull (field_size, NULL, 10);
-	g_free (field_size);
+  field_size = file_list__get_prev_field(line, date_idx, 1);
+  fdata->size = g_ascii_strtoull(field_size, NULL, 10);
+  g_free(field_size);
 
-	fdata->modified = mktime_from_string (line, date_idx, &field_name);
+  fdata->modified = mktime_from_string(line, date_idx, &field_name);
 
-	/* Full path */
+  /* Full path */
 
-	fields = g_strsplit (field_name, " -> ", 2);
+  fields = g_strsplit(field_name, " -> ", 2);
 
-	if (fields[0] == NULL) {
-		g_strfreev (fields);
-		file_data_free (fdata);
-		return;
-	}
+  if (fields[0] == NULL) {
+    g_strfreev(fields);
+    file_data_free(fdata);
+    return;
+  }
 
-	if (fields[1] == NULL) {
-		g_strfreev (fields);
-		fields = g_strsplit (field_name, " link to ", 2);
-	}
+  if (fields[1] == NULL) {
+    g_strfreev(fields);
+    fields = g_strsplit(field_name, " link to ", 2);
+  }
 
-	if (*(fields[0]) == '/') {
-		fdata->full_path = g_strdup (fields[0]);
-		fdata->original_path = fdata->full_path;
-	} else {
-		fdata->full_path = g_strconcat ("/", fields[0], NULL);
-		fdata->original_path = fdata->full_path + 1;
-	}
+  if (*(fields[0]) == '/') {
+    fdata->full_path = g_strdup(fields[0]);
+    fdata->original_path = fdata->full_path;
+  } else {
+    fdata->full_path = g_strconcat("/", fields[0], NULL);
+    fdata->original_path = fdata->full_path + 1;
+  }
 
-	if (fields[1] != NULL)
-		fdata->link = g_strdup (fields[1]);
-	g_strfreev (fields);
+  if (fields[1] != NULL) fdata->link = g_strdup(fields[1]);
+  g_strfreev(fields);
 
-	fdata->name = g_strdup (file_name_from_path (fdata->full_path));
-	fdata->path = remove_level_from_path (fdata->full_path);
+  fdata->name = g_strdup(file_name_from_path(fdata->full_path));
+  fdata->path = remove_level_from_path(fdata->full_path);
 
-	if (*fdata->name == 0)
-		file_data_free (fdata);
-	else
-		fr_command_add_file (comm, fdata);
+  if (*fdata->name == 0)
+    file_data_free(fdata);
+  else
+    fr_command_add_file(comm, fdata);
 }
 
-static void
-fr_command_ar_list (FrCommand *comm)
-{
-	fr_process_set_out_line_func (comm->process, process_line, comm);
+static void fr_command_ar_list(FrCommand *comm) {
+  fr_process_set_out_line_func(comm->process, process_line, comm);
 
-	fr_process_begin_command (comm->process, "ar");
-	fr_process_add_arg (comm->process, "tv");
-	fr_process_add_arg (comm->process, comm->filename);
-	fr_process_end_command (comm->process);
-	fr_process_start (comm->process);
+  fr_process_begin_command(comm->process, "ar");
+  fr_process_add_arg(comm->process, "tv");
+  fr_process_add_arg(comm->process, comm->filename);
+  fr_process_end_command(comm->process);
+  fr_process_start(comm->process);
 }
 
-static void
-fr_command_ar_add (FrCommand     *comm,
-		   const char    *from_file,
-		   GList         *file_list,
-		   const char    *base_dir,
-		   gboolean       update,
-		   gboolean       recursive)
-{
-	GList *scan;
+static void fr_command_ar_add(FrCommand *comm, const char *from_file,
+                              GList *file_list, const char *base_dir,
+                              gboolean update, gboolean recursive) {
+  GList *scan;
 
-	fr_process_begin_command (comm->process, "ar");
+  fr_process_begin_command(comm->process, "ar");
 
-	if (update)
-		fr_process_add_arg (comm->process, "ru");
-	else
-		fr_process_add_arg (comm->process, "r");
+  if (update)
+    fr_process_add_arg(comm->process, "ru");
+  else
+    fr_process_add_arg(comm->process, "r");
 
-	if (base_dir != NULL)
-		fr_process_set_working_dir (comm->process, base_dir);
+  if (base_dir != NULL) fr_process_set_working_dir(comm->process, base_dir);
 
-	fr_process_add_arg (comm->process, comm->filename);
+  fr_process_add_arg(comm->process, comm->filename);
 
-	for (scan = file_list; scan; scan = scan->next)
-		fr_process_add_arg (comm->process, scan->data);
+  for (scan = file_list; scan; scan = scan->next)
+    fr_process_add_arg(comm->process, scan->data);
 
-	fr_process_end_command (comm->process);
+  fr_process_end_command(comm->process);
 }
 
-static void
-fr_command_ar_delete (FrCommand  *comm,
-		      const char *from_file,
-		      GList      *file_list)
-{
-	GList *scan;
+static void fr_command_ar_delete(FrCommand *comm, const char *from_file,
+                                 GList *file_list) {
+  GList *scan;
 
-	fr_process_begin_command (comm->process, "ar");
-	fr_process_add_arg (comm->process, "d");
-	fr_process_add_arg (comm->process, comm->filename);
-	for (scan = file_list; scan; scan = scan->next)
-		fr_process_add_arg (comm->process, scan->data);
-	fr_process_end_command (comm->process);
+  fr_process_begin_command(comm->process, "ar");
+  fr_process_add_arg(comm->process, "d");
+  fr_process_add_arg(comm->process, comm->filename);
+  for (scan = file_list; scan; scan = scan->next)
+    fr_process_add_arg(comm->process, scan->data);
+  fr_process_end_command(comm->process);
 }
 
-static void
-fr_command_ar_extract (FrCommand  *comm,
-		       const char *from_file,
-		       GList      *file_list,
-		       const char *dest_dir,
-		       gboolean    overwrite,
-		       gboolean    skip_older,
-		       gboolean    junk_paths)
-{
-	GList *scan;
+static void fr_command_ar_extract(FrCommand *comm, const char *from_file,
+                                  GList *file_list, const char *dest_dir,
+                                  gboolean overwrite, gboolean skip_older,
+                                  gboolean junk_paths) {
+  GList *scan;
 
-	fr_process_begin_command (comm->process, "ar");
+  fr_process_begin_command(comm->process, "ar");
 
-	if (dest_dir != NULL)
-		fr_process_set_working_dir (comm->process, dest_dir);
+  if (dest_dir != NULL) fr_process_set_working_dir(comm->process, dest_dir);
 
-	fr_process_add_arg (comm->process, "x");
-	fr_process_add_arg (comm->process, comm->filename);
-	for (scan = file_list; scan; scan = scan->next)
-		fr_process_add_arg (comm->process, scan->data);
-	fr_process_end_command (comm->process);
+  fr_process_add_arg(comm->process, "x");
+  fr_process_add_arg(comm->process, comm->filename);
+  for (scan = file_list; scan; scan = scan->next)
+    fr_process_add_arg(comm->process, scan->data);
+  fr_process_end_command(comm->process);
 }
 
-static void
-fr_command_ar_handle_error (FrCommand   *comm,
-			    FrProcError *error)
-{
-	/* FIXME */
+static void fr_command_ar_handle_error(FrCommand *comm, FrProcError *error) {
+  /* FIXME */
 }
 
-const char *ar_mime_type[] = { "application/x-archive",
-                               "application/vnd.debian.binary-package",
-                               NULL };
+const char *ar_mime_type[] = {"application/x-archive",
+                              "application/vnd.debian.binary-package", NULL};
 
-static const char **
-fr_command_ar_get_mime_types (FrCommand *comm)
-{
-	return ar_mime_type;
+static const char **fr_command_ar_get_mime_types(FrCommand *comm) {
+  return ar_mime_type;
 }
 
-static FrCommandCaps
-fr_command_ar_get_capabilities (FrCommand  *comm,
-			        const char *mime_type,
-				gboolean    check_command)
-{
-	FrCommandCaps capabilities;
+static FrCommandCaps fr_command_ar_get_capabilities(FrCommand *comm,
+                                                    const char *mime_type,
+                                                    gboolean check_command) {
+  FrCommandCaps capabilities;
 
-	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	if (is_program_available ("ar", check_command)) {
-		if (is_mime_type (mime_type, "application/vnd.debian.binary-package"))
-			capabilities |= FR_COMMAND_CAN_READ;
-		else if (is_mime_type (mime_type, "application/x-archive"))
-			capabilities |= FR_COMMAND_CAN_READ_WRITE;
-	}
+  capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
+  if (is_program_available("ar", check_command)) {
+    if (is_mime_type(mime_type, "application/vnd.debian.binary-package"))
+      capabilities |= FR_COMMAND_CAN_READ;
+    else if (is_mime_type(mime_type, "application/x-archive"))
+      capabilities |= FR_COMMAND_CAN_READ_WRITE;
+  }
 
-	return capabilities;
+  return capabilities;
 }
 
-static const char *
-fr_command_ar_get_packages (FrCommand  *comm,
-			    const char *mime_type)
-{
-	return PACKAGES ("binutils");
+static const char *fr_command_ar_get_packages(FrCommand *comm,
+                                              const char *mime_type) {
+  return PACKAGES("binutils");
 }
 
-static void
-fr_command_ar_class_init (FrCommandArClass *class)
-{
-        GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
-        FrCommandClass *afc;
+static void fr_command_ar_class_init(FrCommandArClass *class) {
+  GObjectClass *gobject_class = G_OBJECT_CLASS(class);
+  FrCommandClass *afc;
 
-        parent_class = g_type_class_peek_parent (class);
-	afc = (FrCommandClass*) class;
+  parent_class = g_type_class_peek_parent(class);
+  afc = (FrCommandClass *)class;
 
-	gobject_class->finalize = fr_command_ar_finalize;
+  gobject_class->finalize = fr_command_ar_finalize;
 
-        afc->list             = fr_command_ar_list;
-	afc->add              = fr_command_ar_add;
-	afc->delete           = fr_command_ar_delete;
-	afc->extract          = fr_command_ar_extract;
-	afc->handle_error     = fr_command_ar_handle_error;
-	afc->get_mime_types   = fr_command_ar_get_mime_types;
-	afc->get_capabilities = fr_command_ar_get_capabilities;
-	afc->get_packages     = fr_command_ar_get_packages;
+  afc->list = fr_command_ar_list;
+  afc->add = fr_command_ar_add;
+  afc->delete = fr_command_ar_delete;
+  afc->extract = fr_command_ar_extract;
+  afc->handle_error = fr_command_ar_handle_error;
+  afc->get_mime_types = fr_command_ar_get_mime_types;
+  afc->get_capabilities = fr_command_ar_get_capabilities;
+  afc->get_packages = fr_command_ar_get_packages;
 }
 
-static void
-fr_command_ar_init (FrCommand *comm)
-{
-	comm->propAddCanUpdate             = TRUE;
-	comm->propAddCanReplace            = TRUE;
-	comm->propAddCanStoreFolders       = FALSE;
-	comm->propExtractCanAvoidOverwrite = FALSE;
-	comm->propExtractCanSkipOlder      = FALSE;
-	comm->propExtractCanJunkPaths      = FALSE;
-	comm->propPassword                 = FALSE;
-	comm->propTest                     = FALSE;
+static void fr_command_ar_init(FrCommand *comm) {
+  comm->propAddCanUpdate = TRUE;
+  comm->propAddCanReplace = TRUE;
+  comm->propAddCanStoreFolders = FALSE;
+  comm->propExtractCanAvoidOverwrite = FALSE;
+  comm->propExtractCanSkipOlder = FALSE;
+  comm->propExtractCanJunkPaths = FALSE;
+  comm->propPassword = FALSE;
+  comm->propTest = FALSE;
 }
 
-static void
-fr_command_ar_finalize (GObject *object)
-{
-        g_return_if_fail (object != NULL);
-        g_return_if_fail (FR_IS_COMMAND_AR (object));
+static void fr_command_ar_finalize(GObject *object) {
+  g_return_if_fail(object != NULL);
+  g_return_if_fail(FR_IS_COMMAND_AR(object));
 
-	/* Chain up */
-        if (G_OBJECT_CLASS (parent_class)->finalize)
-		G_OBJECT_CLASS (parent_class)->finalize (object);
+  /* Chain up */
+  if (G_OBJECT_CLASS(parent_class)->finalize)
+    G_OBJECT_CLASS(parent_class)->finalize(object);
 }
 
-GType
-fr_command_ar_get_type ()
-{
-        static GType type = 0;
+GType fr_command_ar_get_type() {
+  static GType type = 0;
 
-        if (! type) {
-                GTypeInfo type_info = {
-			sizeof (FrCommandArClass),
-			NULL,
-			NULL,
-			(GClassInitFunc) fr_command_ar_class_init,
-			NULL,
-			NULL,
-			sizeof (FrCommandAr),
-			0,
-			(GInstanceInitFunc) fr_command_ar_init,
-			NULL
-		};
+  if (!type) {
+    GTypeInfo type_info = {sizeof(FrCommandArClass),
+                           NULL,
+                           NULL,
+                           (GClassInitFunc)fr_command_ar_class_init,
+                           NULL,
+                           NULL,
+                           sizeof(FrCommandAr),
+                           0,
+                           (GInstanceInitFunc)fr_command_ar_init,
+                           NULL};
 
-		type = g_type_register_static (FR_TYPE_COMMAND,
-					       "FRCommandAr",
-					       &type_info,
-					       0);
-        }
+    type =
+        g_type_register_static(FR_TYPE_COMMAND, "FRCommandAr", &type_info, 0);
+  }
 
-        return type;
+  return type;
 }

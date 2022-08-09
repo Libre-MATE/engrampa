@@ -15,7 +15,8 @@
  *
  *  You should have received a copy of the GNU General Public
  *  License along with this library; if not, write to the Free
- *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
+ *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
  *
  *  Author: Paolo Bacchilega <paobac@cvs.mate.org>
  *
@@ -28,23 +29,23 @@
 
 G_BEGIN_DECLS
 
-#define CAJA_TYPE_FR  (caja_fr_get_type ())
-#define CAJA_FR(o)    (G_TYPE_CHECK_INSTANCE_CAST ((o), CAJA_TYPE_FR, CajaFr))
-#define CAJA_IS_FR(o) (G_TYPE_CHECK_INSTANCE_TYPE ((o), CAJA_TYPE_FR))
+#define CAJA_TYPE_FR (caja_fr_get_type())
+#define CAJA_FR(o) (G_TYPE_CHECK_INSTANCE_CAST((o), CAJA_TYPE_FR, CajaFr))
+#define CAJA_IS_FR(o) (G_TYPE_CHECK_INSTANCE_TYPE((o), CAJA_TYPE_FR))
 
-typedef struct _CajaFr      CajaFr;
+typedef struct _CajaFr CajaFr;
 typedef struct _CajaFrClass CajaFrClass;
 
 struct _CajaFr {
-	GObject __parent;
+  GObject __parent;
 };
 
 struct _CajaFrClass {
-	GObjectClass __parent;
+  GObjectClass __parent;
 };
 
-GType caja_fr_get_type      (void);
-void  caja_fr_register_type (GTypeModule *module);
+GType caja_fr_get_type(void);
+void caja_fr_register_type(GTypeModule *module);
 
 G_END_DECLS
 

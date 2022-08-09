@@ -17,7 +17,8 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301
+ * USA.
  */
 
 #ifndef FR_LIST_MODEL_H
@@ -25,22 +26,27 @@
 
 #include <gtk/gtk.h>
 
-#define FR_TYPE_LIST_MODEL            (fr_list_model_get_type ())
-#define FR_LIST_MODEL(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_LIST_MODEL, FRListModel))
-#define FR_LIST_MODEL_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_LIST_MODEL, FRListModelClass))
-#define FR_IS_LIST_MODEL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_LIST_MODEL))
-#define FR_IS_LIST_MODEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_LIST_MODEL))
-#define FR_LIST_MODEL_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_LIST_MODEL, FRListModelClass))
+#define FR_TYPE_LIST_MODEL (fr_list_model_get_type())
+#define FR_LIST_MODEL(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST((obj), FR_TYPE_LIST_MODEL, FRListModel))
+#define FR_LIST_MODEL_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_CAST((klass), FR_TYPE_LIST_MODEL, FRListModelClass))
+#define FR_IS_LIST_MODEL(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE((obj), FR_TYPE_LIST_MODEL))
+#define FR_IS_LIST_MODEL_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_TYPE((klass), FR_TYPE_LIST_MODEL))
+#define FR_LIST_MODEL_GET_CLASS(obj) \
+  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_LIST_MODEL, FRListModelClass))
 
 typedef struct FRListModel {
-	GtkListStore __parent;
+  GtkListStore __parent;
 } FRListModel;
 
 typedef struct FRListModelClass {
-	GtkListStoreClass __parent_class;
+  GtkListStoreClass __parent_class;
 } FRListModelClass;
 
-GType         fr_list_model_get_type (void);
-GtkListStore *fr_list_model_new      (int n_columns, ...);
+GType fr_list_model_get_type(void);
+GtkListStore *fr_list_model_new(int n_columns, ...);
 
 #endif /* FR_LIST_MODEL_H */

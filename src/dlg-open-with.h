@@ -17,16 +17,18 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301
+ * USA.
  */
 
 #ifndef DLG_OPEN_WITH_H
 #define DLG_OPEN_WITH_H
 
 #include <gtk/gtk.h>
+
 #include "fr-window.h"
 
-void  open_with_cb  (GtkWidget *widget, void *data);
-void  dlg_open_with (FrWindow *window, GList *file_list);
+void open_with_cb(GtkWidget *widget, void *data);
+void dlg_open_with(FrWindow *window, GList *file_list);
 
 #endif /* DLG_OPEN_WITH_H */

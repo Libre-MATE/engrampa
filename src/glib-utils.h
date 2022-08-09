@@ -17,52 +17,46 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301
+ * USA.
  */
 
 #ifndef _GLIB_UTILS_H
 #define _GLIB_UTILS_H
 
 #include <time.h>
+#include <glib.h>
 
-#define g_signal_handlers_disconnect_by_data(instance, data) \
-    g_signal_handlers_disconnect_matched ((instance), G_SIGNAL_MATCH_DATA, \
-					  0, 0, NULL, NULL, (data))
+#define g_signal_handlers_disconnect_by_data(instance, data)                  \
+  g_signal_handlers_disconnect_matched((instance), G_SIGNAL_MATCH_DATA, 0, 0, \
+                                       NULL, NULL, (data))
 
 /* gobject utils */
 
-void _g_object_unref (gpointer object);
+void _g_object_unref(gpointer object);
 
 /* string utils */
 
-gboolean            strchrs                      (const char *str,
-						  const char *chars);
-char *              str_substitute               (const char *str,
-						  const char *from_str,
-						  const char *to_str);
-char*               escape_str                   (const char  *str,
-						  const char  *meta_chars);
-gboolean            match_regexps                (GRegex     **regexps,
-						  const char  *string,
-						  GRegexMatchFlags match_options);
-char **             search_util_get_patterns     (const char  *pattern_string);
-GRegex **           search_util_get_regexps      (const char  *pattern_string,
-			                          GRegexCompileFlags  compile_options);
-void                free_regexps                 (GRegex     **regexps);
-const char *        eat_spaces                   (const char  *line);
-char **             split_line                   (const char  *line,
-						  int          n_fields);
-const char *        get_last_field               (const char  *line,
-						  int          last_field);
-const char *        get_static_string            (const char  *s);
-char*               g_uri_display_basename       (const char  *uri);
+gboolean strchrs(const char *str, const char *chars);
+char *str_substitute(const char *str, const char *from_str, const char *to_str);
+char *escape_str(const char *str, const char *meta_chars);
+gboolean match_regexps(GRegex **regexps, const char *string,
+                       GRegexMatchFlags match_options);
+char **search_util_get_patterns(const char *pattern_string);
+GRegex **search_util_get_regexps(const char *pattern_string,
+                                 GRegexCompileFlags compile_options);
+void free_regexps(GRegex **regexps);
+const char *eat_spaces(const char *line);
+char **split_line(const char *line, int n_fields);
+const char *get_last_field(const char *line, int last_field);
+const char *get_static_string(const char *s);
+char *g_uri_display_basename(const char *uri);
 
 /* path filename */
 
-const char *        _g_path_get_file_name          (const char          *path);
-const char *        _g_path_get_base_name          (const char          *path,
-						    const char          *base_dir,
-						    gboolean             junk_paths);
+const char *_g_path_get_file_name(const char *path);
+const char *_g_path_get_base_name(const char *path, const char *base_dir,
+                                  gboolean junk_paths);
 
 /**/
 
@@ -72,9 +66,7 @@ const char *        _g_path_get_base_name          (const char          *path,
 
 #define DEBUG_INFO __FILE__, __LINE__, __FUNCTION__
 
-void     debug                     (const char *file,
-				    int         line,
-				    const char *function,
-				    const char *format, ...);
+void debug(const char *file, int line, const char *function, const char *format,
+           ...);
 
 #endif /* _GLIB_UTILS_H */

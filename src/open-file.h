@@ -17,32 +17,32 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301
+ * USA.
  */
 
 #ifndef OPEN_FILE_H
 #define OPEN_FILE_H
 
-#include <glib.h>
-#include <glib-object.h>
 #include <gio/gio.h>
+#include <glib-object.h>
+#include <glib.h>
 #include <time.h>
 
 typedef struct {
-	char         *path;
-	char         *extracted_uri;
-	char         *temp_dir;
-	time_t        last_modified;
-	GFileMonitor *monitor;
+  char *path;
+  char *extracted_uri;
+  char *temp_dir;
+  time_t last_modified;
+  GFileMonitor *monitor;
 } OpenFile;
 
-#define FR_TYPE_OPEN_FILE (open_file_get_type ())
+#define FR_TYPE_OPEN_FILE (open_file_get_type())
 
-GType       open_file_get_type (void);
-OpenFile *  open_file_new      (const char *path,
-			        const char *extracted_path,
-			        const char *temp_dir);
-OpenFile *  open_file_copy     (OpenFile   *src);
-void        open_file_free     (OpenFile   *ofile);
+GType open_file_get_type(void);
+OpenFile *open_file_new(const char *path, const char *extracted_path,
+                        const char *temp_dir);
+OpenFile *open_file_copy(OpenFile *src);
+void open_file_free(OpenFile *ofile);
 
 #endif /* OPEN_FILE_H */

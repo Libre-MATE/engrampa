@@ -17,40 +17,47 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301
+ * USA.
  */
 
 #ifndef FR_COMMAND_UNSTUFF_H
 #define FR_COMMAND_UNSTUFF_H
 
 #include <glib.h>
+
 #include "file-data.h"
 #include "fr-command.h"
 #include "fr-process.h"
 
-#define FR_TYPE_COMMAND_UNSTUFF            (fr_command_unstuff_get_type ())
-#define FR_COMMAND_UNSTUFF(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_UNSTUFF, FrCommandUnstuff))
-#define FR_COMMAND_UNSTUFF_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_UNSTUFF, FrCommandUnstuffClass))
-#define FR_IS_COMMAND_UNSTUFF(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_UNSTUFF))
-#define FR_IS_COMMAND_UNSTUFF_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_UNSTUFF))
-#define FR_COMMAND_UNSTUFF_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_UNSTUFF, FrCommandUnstuffClass))
+#define FR_TYPE_COMMAND_UNSTUFF (fr_command_unstuff_get_type())
+#define FR_COMMAND_UNSTUFF(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST((obj), FR_TYPE_COMMAND_UNSTUFF, FrCommandUnstuff))
+#define FR_COMMAND_UNSTUFF_CLASS(klass)                      \
+  (G_TYPE_CHECK_CLASS_CAST((klass), FR_TYPE_COMMAND_UNSTUFF, \
+                           FrCommandUnstuffClass))
+#define FR_IS_COMMAND_UNSTUFF(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE((obj), FR_TYPE_COMMAND_UNSTUFF))
+#define FR_IS_COMMAND_UNSTUFF_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_TYPE((klass), FR_TYPE_COMMAND_UNSTUFF))
+#define FR_COMMAND_UNSTUFF_GET_CLASS(obj)                    \
+  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_UNSTUFF, \
+                             FrCommandUnstuffClass))
 
-typedef struct _FrCommandUnstuff       FrCommandUnstuff;
-typedef struct _FrCommandUnstuffClass  FrCommandUnstuffClass;
+typedef struct _FrCommandUnstuff FrCommandUnstuff;
+typedef struct _FrCommandUnstuffClass FrCommandUnstuffClass;
 
-struct _FrCommandUnstuff
-{
-	FrCommand  __parent;
+struct _FrCommandUnstuff {
+  FrCommand __parent;
 
-	char      *target_dir;
-	FileData  *fdata;
+  char *target_dir;
+  FileData *fdata;
 };
 
-struct _FrCommandUnstuffClass
-{
-	FrCommandClass __parent_class;
+struct _FrCommandUnstuffClass {
+  FrCommandClass __parent_class;
 };
 
-GType fr_command_unstuff_get_type (void);
+GType fr_command_unstuff_get_type(void);
 
 #endif /* FR_COMMAND_UNSTUFF_H */

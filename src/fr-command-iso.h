@@ -17,38 +17,43 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301
+ * USA.
  */
 
 #ifndef FR_COMMAND_ISO_H
 #define FR_COMMAND_ISO_H
 
 #include <glib.h>
+
 #include "fr-command.h"
 #include "fr-process.h"
 
-#define FR_TYPE_COMMAND_ISO            (fr_command_iso_get_type ())
-#define FR_COMMAND_ISO(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_ISO, FrCommandIso))
-#define FR_COMMAND_ISO_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_ISO, FrCommandIsoClass))
-#define FR_IS_COMMAND_ISO(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_ISO))
-#define FR_IS_COMMAND_ISO_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_ISO))
-#define FR_COMMAND_ISO_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_ISO, FrCommandIsoClass))
+#define FR_TYPE_COMMAND_ISO (fr_command_iso_get_type())
+#define FR_COMMAND_ISO(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST((obj), FR_TYPE_COMMAND_ISO, FrCommandIso))
+#define FR_COMMAND_ISO_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_CAST((klass), FR_TYPE_COMMAND_ISO, FrCommandIsoClass))
+#define FR_IS_COMMAND_ISO(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE((obj), FR_TYPE_COMMAND_ISO))
+#define FR_IS_COMMAND_ISO_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_TYPE((klass), FR_TYPE_COMMAND_ISO))
+#define FR_COMMAND_ISO_GET_CLASS(obj) \
+  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_ISO, FrCommandIsoClass))
 
-typedef struct _FrCommandIso       FrCommandIso;
-typedef struct _FrCommandIsoClass  FrCommandIsoClass;
+typedef struct _FrCommandIso FrCommandIso;
+typedef struct _FrCommandIsoClass FrCommandIsoClass;
 
-struct _FrCommandIso
-{
-	FrCommand  __parent;
-	char      *cur_path;
-	gboolean   joliet;
+struct _FrCommandIso {
+  FrCommand __parent;
+  char *cur_path;
+  gboolean joliet;
 };
 
-struct _FrCommandIsoClass
-{
-	FrCommandClass __parent_class;
+struct _FrCommandIsoClass {
+  FrCommandClass __parent_class;
 };
 
-GType fr_command_iso_get_type (void);
+GType fr_command_iso_get_type(void);
 
 #endif /* FR_COMMAND_ISO_H */

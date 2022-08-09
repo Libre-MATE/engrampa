@@ -22,52 +22,52 @@
 #ifndef FR_INIT_H
 #define FR_INIT_H
 
-#include "preferences.h"
 #include "fr-process.h"
 #include "fr-window.h"
+#include "preferences.h"
 
 typedef struct {
-	FrWindow  *window;
-	FrProcess *process;
-	char      *filename;
-	char      *e_filename;
-	char      *temp_dir;
+  FrWindow *window;
+  FrProcess *process;
+  char *filename;
+  char *e_filename;
+  char *temp_dir;
 } ViewerData;
 
 typedef struct {
-	FrWindow  *window;
-	FrProcess *process;
-	char      *command;
-	GAppInfo  *app;
-	GList     *file_list;
-	char      *temp_dir;
+  FrWindow *window;
+  FrProcess *process;
+  char *command;
+  GAppInfo *app;
+  GList *file_list;
+  char *temp_dir;
 } CommandData;
 
-extern GList                 *CommandList;
-extern gint                   ForceDirectoryCreation;
-extern GHashTable            *ProgramsCache;
-extern GPtrArray             *Registered_Commands;
-extern FrMimeTypeDescription  mime_type_desc[];
-extern FrExtensionType        file_ext_type[];
-extern int                    single_file_save_type[]; /* File types that can be saved when
-							* a single file is selected.
-							* Includes single file compressors
-							* such as gzip, compress, etc. */
-extern int                    save_type[];             /* File types that can be saved. */
-extern int                    open_type[];             /* File types that can be opened. */
-extern int                    create_type[];           /* File types that can be created. */
+extern GList *CommandList;
+extern gint ForceDirectoryCreation;
+extern GHashTable *ProgramsCache;
+extern GPtrArray *Registered_Commands;
+extern FrMimeTypeDescription mime_type_desc[];
+extern FrExtensionType file_ext_type[];
+extern int single_file_save_type[]; /* File types that can be saved when
+                                     * a single file is selected.
+                                     * Includes single file compressors
+                                     * such as gzip, compress, etc. */
+extern int save_type[];             /* File types that can be saved. */
+extern int open_type[];             /* File types that can be opened. */
+extern int create_type[];           /* File types that can be created. */
 
-GType        get_command_type_from_mime_type         (const char    *mime_type,
-						      FrCommandCaps  requested_capabilities);
-GType        get_preferred_command_for_mime_type     (const char    *mime_type,
-						      FrCommandCaps  requested_capabilities);
-void         update_registered_commands_capabilities (void);
-const char * get_mime_type_from_extension            (const char    *ext);
-const char * get_archive_filename_extension          (const char    *uri);
-int          get_mime_type_index                     (const char    *mime_type);
-void         sort_mime_types_by_extension            (int           *a);
-void         sort_mime_types_by_description          (int           *a);
-void         initialize_data                         (void);
-void         release_data                            (void);
+GType get_command_type_from_mime_type(const char *mime_type,
+                                      FrCommandCaps requested_capabilities);
+GType get_preferred_command_for_mime_type(const char *mime_type,
+                                          FrCommandCaps requested_capabilities);
+void update_registered_commands_capabilities(void);
+const char *get_mime_type_from_extension(const char *ext);
+const char *get_archive_filename_extension(const char *uri);
+int get_mime_type_index(const char *mime_type);
+void sort_mime_types_by_extension(int *a);
+void sort_mime_types_by_description(int *a);
+void initialize_data(void);
+void release_data(void);
 
 #endif /* FR_INIT_H */

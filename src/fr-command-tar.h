@@ -17,45 +17,50 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301
+ * USA.
  */
 
 #ifndef FR_COMMAND_TAR_H
 #define FR_COMMAND_TAR_H
 
 #include <glib.h>
+
 #include "fr-command.h"
 #include "fr-process.h"
 #include "typedefs.h"
 
-#define FR_TYPE_COMMAND_TAR            (fr_command_tar_get_type ())
-#define FR_COMMAND_TAR(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_TAR, FrCommandTar))
-#define FR_COMMAND_TAR_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_TAR, FrCommandTarClass))
-#define FR_IS_COMMAND_TAR(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_TAR))
-#define FR_IS_COMMAND_TAR_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_TAR))
-#define FR_COMMAND_TAR_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_TAR, FrCommandTarClass))
+#define FR_TYPE_COMMAND_TAR (fr_command_tar_get_type())
+#define FR_COMMAND_TAR(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST((obj), FR_TYPE_COMMAND_TAR, FrCommandTar))
+#define FR_COMMAND_TAR_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_CAST((klass), FR_TYPE_COMMAND_TAR, FrCommandTarClass))
+#define FR_IS_COMMAND_TAR(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE((obj), FR_TYPE_COMMAND_TAR))
+#define FR_IS_COMMAND_TAR_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_TYPE((klass), FR_TYPE_COMMAND_TAR))
+#define FR_COMMAND_TAR_GET_CLASS(obj) \
+  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_TAR, FrCommandTarClass))
 
-typedef struct _FrCommandTar       FrCommandTar;
-typedef struct _FrCommandTarClass  FrCommandTarClass;
+typedef struct _FrCommandTar FrCommandTar;
+typedef struct _FrCommandTarClass FrCommandTarClass;
 
-struct _FrCommandTar
-{
-	FrCommand  __parent;
+struct _FrCommandTar {
+  FrCommand __parent;
 
-	/*<private>*/
+  /*<private>*/
 
-	char      *uncomp_filename;
-	gboolean   name_modified;
-	char      *compress_command;
+  char *uncomp_filename;
+  gboolean name_modified;
+  char *compress_command;
 
-	char      *msg;
+  char *msg;
 };
 
-struct _FrCommandTarClass
-{
-	FrCommandClass __parent_class;
+struct _FrCommandTarClass {
+  FrCommandClass __parent_class;
 };
 
-GType fr_command_tar_get_type (void);
+GType fr_command_tar_get_type(void);
 
 #endif /* FR_COMMAND_TAR_H */

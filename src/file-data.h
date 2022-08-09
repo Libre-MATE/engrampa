@@ -17,56 +17,54 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301
+ * USA.
  */
 
 #ifndef FILE_DATA_H
 #define FILE_DATA_H
 
-#include <glib.h>
 #include <glib-object.h>
+#include <glib.h>
 #include <time.h>
 
 typedef struct {
-	char       *original_path;    /* path read from command line. */
-	char       *full_path;        /* "/" + original_path. */
-	char       *link;
-	goffset     size;
-	time_t      modified;
+  char *original_path; /* path read from command line. */
+  char *full_path;     /* "/" + original_path. */
+  char *link;
+  goffset size;
+  time_t modified;
 
-	char       *name;             /* The file name. */
-	char       *path;             /* The directory. */
-	gboolean    encrypted;        /* Whether the file is encrypted. */
-	gboolean    dir;              /* Whether this is a directory listed in the archive */
-	goffset     dir_size;
-	const char *content_type;
+  char *name;         /* The file name. */
+  char *path;         /* The directory. */
+  gboolean encrypted; /* Whether the file is encrypted. */
+  gboolean dir;       /* Whether this is a directory listed in the archive */
+  goffset dir_size;
+  const char *content_type;
 
-	/* Additional data. */
+  /* Additional data. */
 
-	gboolean    list_dir;         /* Whether this entry is used to show
-				       * a directory. */
-	char       *list_name;        /* The string visualized in the list
-				       * view. */
-	char       *sort_key;
+  gboolean list_dir; /* Whether this entry is used to show
+                      * a directory. */
+  char *list_name;   /* The string visualized in the list
+                      * view. */
+  char *sort_key;
 
-	/* Private data */
+  /* Private data */
 
-	gboolean    free_original_path;
+  gboolean free_original_path;
 } FileData;
 
-#define FR_TYPE_FILE_DATA (file_data_get_type ())
+#define FR_TYPE_FILE_DATA (file_data_get_type())
 
-GType           file_data_get_type            (void);
-FileData *      file_data_new                 (void);
-FileData *      file_data_copy                (FileData      *src);
-void            file_data_free                (FileData      *fdata);
-void            file_data_update_content_type (FileData      *fdata);
-gboolean        file_data_is_dir              (FileData      *fdata);
-void            file_data_set_list_name       (FileData      *fdata,
-					       const char    *value);
-int  file_data_compare_by_path                (gconstpointer  a,
-				               gconstpointer  b);
-int  find_path_in_file_data_array             (GPtrArray     *array,
-				               const char    *path);
+GType file_data_get_type(void);
+FileData *file_data_new(void);
+FileData *file_data_copy(FileData *src);
+void file_data_free(FileData *fdata);
+void file_data_update_content_type(FileData *fdata);
+gboolean file_data_is_dir(FileData *fdata);
+void file_data_set_list_name(FileData *fdata, const char *value);
+int file_data_compare_by_path(gconstpointer a, gconstpointer b);
+int find_path_in_file_data_array(GPtrArray *array, const char *path);
 
 #endif /* FILE_DATA_H */

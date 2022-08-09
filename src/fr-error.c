@@ -17,18 +17,16 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301
+ * USA.
  */
 
 #include "fr-error.h"
 
-GQuark
-fr_error_quark (void)
-{
-	static GQuark quark;
+GQuark fr_error_quark(void) {
+  static GQuark quark;
 
-        if (!quark)
-                quark = g_quark_from_static_string ("engrampa-error");
+  if (!quark) quark = g_quark_from_static_string("engrampa-error");
 
-        return quark;
+  return quark;
 }

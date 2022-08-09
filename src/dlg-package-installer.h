@@ -17,7 +17,8 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301
+ * USA.
  */
 
 #ifndef DLG_PACKAGE_INSTALLER_H
@@ -25,8 +26,7 @@
 
 #include "fr-window.h"
 
-void dlg_package_installer (FrWindow  *window,
-			    FrArchive *archive,
-			    FrAction   action);
+void dlg_package_installer(FrWindow *window, FrArchive *archive,
+                           FrAction action);
 
 #endif /* DLG_PACKAGE_INSTALLER_H */

@@ -17,25 +17,29 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301
+ * USA.
  */
 
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
+
+#include "fr-command-rpm.h"
+
+#include <glib.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
-#include <glib.h>
-
 #include "file-data.h"
 #include "file-utils.h"
-#include "glib-utils.h"
 #include "fr-command.h"
-#include "fr-command-rpm.h"
+#include "glib-utils.h"
 
-static void fr_command_rpm_class_init  (FrCommandRpmClass *class);
-static void fr_command_rpm_init        (FrCommand         *afile);
-static void fr_command_rpm_finalize    (GObject           *object);
+static void fr_command_rpm_class_init(FrCommandRpmClass *class);
+static void fr_command_rpm_init(FrCommand *afile);
+static void fr_command_rpm_finalize(GObject *object);
 
 /* Parent Class */
 
@@ -43,279 +47,247 @@ static FrCommandClass *parent_class = NULL;
 
 /* -- list -- */
 
-static time_t
-mktime_from_string (char *month,
-		    char *mday,
-		    char *year)
-{
-	struct tm tm = {0, };
+static time_t mktime_from_string(char *month, char *mday, char *year) {
+  struct tm tm = {
+      0,
+  };
 
-	tm.tm_isdst = -1;
+  tm.tm_isdst = -1;
 
-	if (month != NULL) {
-		static const char *months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-		                                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+  if (month != NULL) {
+    static const char *months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
-		int i;
+    int i;
 
-		for (i = 0; i < 12; i++) {
-			if (strcmp (months[i], month) == 0) {
-				tm.tm_mon = i;
-				break;
-			}
-		}
-	} else
-		tm.tm_mon = 0;
+    for (i = 0; i < 12; i++) {
+      if (strcmp(months[i], month) == 0) {
+        tm.tm_mon = i;
+        break;
+      }
+    }
+  } else
+    tm.tm_mon = 0;
 
-	if (mday != NULL)
-		tm.tm_mday = atoi (mday);
-	else
-		tm.tm_mday = 1;
+  if (mday != NULL)
+    tm.tm_mday = atoi(mday);
+  else
+    tm.tm_mday = 1;
 
-	if (year != NULL) {
-		if (strchr (year, ':') != NULL) {
-			char **fields = g_strsplit (year, ":", 2);
-			if ((fields != NULL) && (g_strv_length (fields) == 2)) {
-				time_t      now;
-				struct tm  *now_tm;
+  if (year != NULL) {
+    if (strchr(year, ':') != NULL) {
+      char **fields = g_strsplit(year, ":", 2);
+      if ((fields != NULL) && (g_strv_length(fields) == 2)) {
+        time_t now;
+        struct tm *now_tm;
 
-				tm.tm_hour = atoi (fields[0]);
-				tm.tm_min = atoi (fields[1]);
+        tm.tm_hour = atoi(fields[0]);
+        tm.tm_min = atoi(fields[1]);
 
-				now = time(NULL);
-				now_tm = localtime (&now);
-				tm.tm_year = now_tm->tm_year;
-			}
-		} else
-			tm.tm_year = atoi (year) - 1900;
-	} else
-		tm.tm_year = 70;
+        now = time(NULL);
+        now_tm = localtime(&now);
+        tm.tm_year = now_tm->tm_year;
+      }
+    } else
+      tm.tm_year = atoi(year) - 1900;
+  } else
+    tm.tm_year = 70;
 
-	return mktime (&tm);
+  return mktime(&tm);
 }
 
-static void
-list__process_line (char     *line,
-		    gpointer  data)
-{
-	FileData    *fdata;
-	FrCommand   *comm = FR_COMMAND (data);
-	char       **fields;
-	const char  *name_field;
-	char        *name;
-	int          ofs = 0;
+static void list__process_line(char *line, gpointer data) {
+  FileData *fdata;
+  FrCommand *comm = FR_COMMAND(data);
+  char **fields;
+  const char *name_field;
+  char *name;
+  int ofs = 0;
 
-	g_return_if_fail (line != NULL);
+  g_return_if_fail(line != NULL);
 
-	fdata = file_data_new ();
+  fdata = file_data_new();
 
 #ifdef __sun
-	fields = split_line (line, 9);
-	fdata->size = g_ascii_strtoull (fields[4], NULL, 10);
-	fdata->modified = mktime_from_string (fields[5], fields[6], fields[8]);
-	g_strfreev (fields);
+  fields = split_line(line, 9);
+  fdata->size = g_ascii_strtoull(fields[4], NULL, 10);
+  fdata->modified = mktime_from_string(fields[5], fields[6], fields[8]);
+  g_strfreev(fields);
 
-	name_field = get_last_field (line, 10);
-#else /* !__sun */
-	/* Handle char and block device files */
-	if ((line[0] == 'c') || (line[0] == 'b')) {
-		fields = split_line (line, 9);
-		ofs = 1;
-		fdata->size = 0;
-		/* TODO We should also specify the content type */
-	}
-	else {
-		fields = split_line (line, 8);
-		fdata->size = g_ascii_strtoull (fields[4], NULL, 10);
-	}
-	fdata->modified = mktime_from_string (fields[5+ofs], fields[6+ofs], fields[7+ofs]);
-	g_strfreev (fields);
+  name_field = get_last_field(line, 10);
+#else  /* !__sun */
+  /* Handle char and block device files */
+  if ((line[0] == 'c') || (line[0] == 'b')) {
+    fields = split_line(line, 9);
+    ofs = 1;
+    fdata->size = 0;
+    /* TODO We should also specify the content type */
+  } else {
+    fields = split_line(line, 8);
+    fdata->size = g_ascii_strtoull(fields[4], NULL, 10);
+  }
+  fdata->modified =
+      mktime_from_string(fields[5 + ofs], fields[6 + ofs], fields[7 + ofs]);
+  g_strfreev(fields);
 
-	name_field = get_last_field (line, 9+ofs);
+  name_field = get_last_field(line, 9 + ofs);
 #endif /* !__sun */
 
-	fields = g_strsplit (name_field, " -> ", 2);
+  fields = g_strsplit(name_field, " -> ", 2);
 
-	if (fields[1] == NULL) {
-		g_strfreev (fields);
-		fields = g_strsplit (name_field, " link to ", 2);
-	}
+  if (fields[1] == NULL) {
+    g_strfreev(fields);
+    fields = g_strsplit(name_field, " link to ", 2);
+  }
 
-	fdata->dir = line[0] == 'd';
+  fdata->dir = line[0] == 'd';
 
-	name = g_strcompress (fields[0]);
-	if (*(fields[0]) == '/') {
-		fdata->full_path = g_strdup (name);
-		fdata->original_path = fdata->full_path;
-	}
-	else {
-		fdata->full_path = g_strconcat ("/", name, NULL);
-		fdata->original_path = fdata->full_path + 1;
-	}
-	if (fdata->dir && (name[strlen (name) - 1] != '/')) {
-		char *old_full_path = fdata->full_path;
-		fdata->full_path = g_strconcat (old_full_path, "/", NULL);
-		g_free (old_full_path);
-		fdata->original_path = g_strdup (name);
-		fdata->free_original_path = TRUE;
-	}
-	g_free (name);
+  name = g_strcompress(fields[0]);
+  if (*(fields[0]) == '/') {
+    fdata->full_path = g_strdup(name);
+    fdata->original_path = fdata->full_path;
+  } else {
+    fdata->full_path = g_strconcat("/", name, NULL);
+    fdata->original_path = fdata->full_path + 1;
+  }
+  if (fdata->dir && (name[strlen(name) - 1] != '/')) {
+    char *old_full_path = fdata->full_path;
+    fdata->full_path = g_strconcat(old_full_path, "/", NULL);
+    g_free(old_full_path);
+    fdata->original_path = g_strdup(name);
+    fdata->free_original_path = TRUE;
+  }
+  g_free(name);
 
-	if (fields[1] != NULL)
-		fdata->link = g_strcompress (fields[1]);
-	g_strfreev (fields);
+  if (fields[1] != NULL) fdata->link = g_strcompress(fields[1]);
+  g_strfreev(fields);
 
-	if (fdata->dir)
-		fdata->name = dir_name_from_path (fdata->full_path);
-	else
-		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
-	fdata->path = remove_level_from_path (fdata->full_path);
+  if (fdata->dir)
+    fdata->name = dir_name_from_path(fdata->full_path);
+  else
+    fdata->name = g_strdup(file_name_from_path(fdata->full_path));
+  fdata->path = remove_level_from_path(fdata->full_path);
 
-	if (*fdata->name == 0)
-		file_data_free (fdata);
-	else
-		fr_command_add_file (comm, fdata);
+  if (*fdata->name == 0)
+    file_data_free(fdata);
+  else
+    fr_command_add_file(comm, fdata);
 }
 
-static void
-fr_command_rpm_list (FrCommand *comm)
-{
-	fr_process_set_out_line_func (comm->process, list__process_line, comm);
+static void fr_command_rpm_list(FrCommand *comm) {
+  fr_process_set_out_line_func(comm->process, list__process_line, comm);
 
-	fr_process_begin_command (comm->process, "sh");
-	fr_process_add_arg (comm->process, "-c");
-	fr_process_add_arg_concat (comm->process, "rpm2cpio < ", comm->e_filename, " | cpio -itv", NULL);
-	fr_process_end_command (comm->process);
-	fr_process_start (comm->process);
+  fr_process_begin_command(comm->process, "sh");
+  fr_process_add_arg(comm->process, "-c");
+  fr_process_add_arg_concat(comm->process, "rpm2cpio < ", comm->e_filename,
+                            " | cpio -itv", NULL);
+  fr_process_end_command(comm->process);
+  fr_process_start(comm->process);
 }
 
-static void
-fr_command_rpm_extract (FrCommand  *comm,
-		        const char  *from_file,
-			GList      *file_list,
-			const char *dest_dir,
-			gboolean    overwrite,
-			gboolean    skip_older,
-			gboolean    junk_paths)
-{
-	GList   *scan;
-	GString *cmd;
+static void fr_command_rpm_extract(FrCommand *comm, const char *from_file,
+                                   GList *file_list, const char *dest_dir,
+                                   gboolean overwrite, gboolean skip_older,
+                                   gboolean junk_paths) {
+  GList *scan;
+  GString *cmd;
 
-	fr_process_begin_command (comm->process, "sh");
-	if (dest_dir != NULL)
-                fr_process_set_working_dir (comm->process, dest_dir);
-	fr_process_add_arg (comm->process, "-c");
+  fr_process_begin_command(comm->process, "sh");
+  if (dest_dir != NULL) fr_process_set_working_dir(comm->process, dest_dir);
+  fr_process_add_arg(comm->process, "-c");
 
-	cmd = g_string_new ("rpm2cpio < ");
-	g_string_append (cmd, comm->e_filename);
-	g_string_append (cmd, " | cpio -idu");
-	for (scan = file_list; scan; scan = scan->next) {
-		g_string_append (cmd, " ");
-		char *filename = g_shell_quote (scan->data);
-		g_string_append (cmd, filename);
-		g_free (filename);
-	}
-	fr_process_add_arg (comm->process, cmd->str);
-	g_string_free (cmd, TRUE);
+  cmd = g_string_new("rpm2cpio < ");
+  g_string_append(cmd, comm->e_filename);
+  g_string_append(cmd, " | cpio -idu");
+  for (scan = file_list; scan; scan = scan->next) {
+    g_string_append(cmd, " ");
+    char *filename = g_shell_quote(scan->data);
+    g_string_append(cmd, filename);
+    g_free(filename);
+  }
+  fr_process_add_arg(comm->process, cmd->str);
+  g_string_free(cmd, TRUE);
 
-	fr_process_end_command (comm->process);
+  fr_process_end_command(comm->process);
 }
 
-const char *rpm_mime_type[] = { "application/x-rpm", NULL };
+const char *rpm_mime_type[] = {"application/x-rpm", NULL};
 
-static const char **
-fr_command_rpm_get_mime_types (FrCommand *comm)
-{
-	return rpm_mime_type;
+static const char **fr_command_rpm_get_mime_types(FrCommand *comm) {
+  return rpm_mime_type;
 }
 
-static FrCommandCaps
-fr_command_rpm_get_capabilities (FrCommand  *comm,
-			         const char *mime_type,
-				 gboolean    check_command)
-{
-	FrCommandCaps capabilities;
+static FrCommandCaps fr_command_rpm_get_capabilities(FrCommand *comm,
+                                                     const char *mime_type,
+                                                     gboolean check_command) {
+  FrCommandCaps capabilities;
 
-	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	if (is_program_available ("rpm2cpio", check_command) &&
-            is_program_available (CPIO_PATH, check_command))
-		capabilities |= FR_COMMAND_CAN_READ;
+  capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
+  if (is_program_available("rpm2cpio", check_command) &&
+      is_program_available(CPIO_PATH, check_command))
+    capabilities |= FR_COMMAND_CAN_READ;
 
-	return capabilities;
+  return capabilities;
 }
 
-static const char *
-fr_command_rpm_get_packages (FrCommand  *comm,
-			     const char *mime_type)
-{
-	return PACKAGES ("cpio,rpm");
+static const char *fr_command_rpm_get_packages(FrCommand *comm,
+                                               const char *mime_type) {
+  return PACKAGES("cpio,rpm");
 }
 
-static void
-fr_command_rpm_class_init (FrCommandRpmClass *class)
-{
-        GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
-        FrCommandClass *afc;
+static void fr_command_rpm_class_init(FrCommandRpmClass *class) {
+  GObjectClass *gobject_class = G_OBJECT_CLASS(class);
+  FrCommandClass *afc;
 
-        parent_class = g_type_class_peek_parent (class);
-	afc = (FrCommandClass*) class;
+  parent_class = g_type_class_peek_parent(class);
+  afc = (FrCommandClass *)class;
 
-	gobject_class->finalize = fr_command_rpm_finalize;
+  gobject_class->finalize = fr_command_rpm_finalize;
 
-        afc->list             = fr_command_rpm_list;
-	afc->extract          = fr_command_rpm_extract;
-	afc->get_mime_types   = fr_command_rpm_get_mime_types;
-	afc->get_capabilities = fr_command_rpm_get_capabilities;
-	afc->get_packages     = fr_command_rpm_get_packages;
+  afc->list = fr_command_rpm_list;
+  afc->extract = fr_command_rpm_extract;
+  afc->get_mime_types = fr_command_rpm_get_mime_types;
+  afc->get_capabilities = fr_command_rpm_get_capabilities;
+  afc->get_packages = fr_command_rpm_get_packages;
 }
 
-static void
-fr_command_rpm_init (FrCommand *comm)
-{
-	comm->propAddCanUpdate             = FALSE;
-	comm->propAddCanReplace            = FALSE;
-	comm->propExtractCanAvoidOverwrite = FALSE;
-	comm->propExtractCanSkipOlder      = FALSE;
-	comm->propExtractCanJunkPaths      = FALSE;
-	comm->propPassword                 = FALSE;
-	comm->propTest                     = FALSE;
+static void fr_command_rpm_init(FrCommand *comm) {
+  comm->propAddCanUpdate = FALSE;
+  comm->propAddCanReplace = FALSE;
+  comm->propExtractCanAvoidOverwrite = FALSE;
+  comm->propExtractCanSkipOlder = FALSE;
+  comm->propExtractCanJunkPaths = FALSE;
+  comm->propPassword = FALSE;
+  comm->propTest = FALSE;
 }
 
-static void
-fr_command_rpm_finalize (GObject *object)
-{
-        g_return_if_fail (object != NULL);
-        g_return_if_fail (FR_IS_COMMAND_RPM (object));
+static void fr_command_rpm_finalize(GObject *object) {
+  g_return_if_fail(object != NULL);
+  g_return_if_fail(FR_IS_COMMAND_RPM(object));
 
-	/* Chain up */
-        if (G_OBJECT_CLASS (parent_class)->finalize)
-		G_OBJECT_CLASS (parent_class)->finalize (object);
+  /* Chain up */
+  if (G_OBJECT_CLASS(parent_class)->finalize)
+    G_OBJECT_CLASS(parent_class)->finalize(object);
 }
 
-GType
-fr_command_rpm_get_type ()
-{
-        static GType type = 0;
+GType fr_command_rpm_get_type() {
+  static GType type = 0;
 
-        if (! type) {
-                GTypeInfo type_info = {
-			sizeof (FrCommandRpmClass),
-			NULL,
-			NULL,
-			(GClassInitFunc) fr_command_rpm_class_init,
-			NULL,
-			NULL,
-			sizeof (FrCommandRpm),
-			0,
-			(GInstanceInitFunc) fr_command_rpm_init,
-			NULL
-		};
+  if (!type) {
+    GTypeInfo type_info = {sizeof(FrCommandRpmClass),
+                           NULL,
+                           NULL,
+                           (GClassInitFunc)fr_command_rpm_class_init,
+                           NULL,
+                           NULL,
+                           sizeof(FrCommandRpm),
+                           0,
+                           (GInstanceInitFunc)fr_command_rpm_init,
+                           NULL};
 
-		type = g_type_register_static (FR_TYPE_COMMAND,
-					       "FRCommandRpm",
-					       &type_info,
-					       0);
-        }
+    type =
+        g_type_register_static(FR_TYPE_COMMAND, "FRCommandRpm", &type_info, 0);
+  }
 
-        return type;
+  return type;
 }

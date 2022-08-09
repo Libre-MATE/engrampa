@@ -24,8 +24,8 @@
 
 #include "typedefs.h"
 
-#define FR_TYPE_PROC_ERROR (fr_proc_error_get_type ())
+#define FR_TYPE_PROC_ERROR (fr_proc_error_get_type())
 
-GType fr_proc_error_get_type (void);
+GType fr_proc_error_get_type(void);
 
 #endif /* FR_PROC_ERROR_H */

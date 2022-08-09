@@ -19,34 +19,31 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
+
 #include "fr-proc-error.h"
 
-static gpointer
-fr_proc_error_copy (gpointer boxed)
-{
-	FrProcError *old_error = boxed;
-	FrProcError *new_error;
+static gpointer fr_proc_error_copy(gpointer boxed) {
+  FrProcError *old_error = boxed;
+  FrProcError *new_error;
 
-	new_error = g_new (FrProcError, 1);
-	new_error->type = old_error->type;
-	new_error->status = old_error->status;
-	new_error->gerror = (old_error->gerror != NULL) ? g_error_copy (old_error->gerror) : NULL;
+  new_error = g_new(FrProcError, 1);
+  new_error->type = old_error->type;
+  new_error->status = old_error->status;
+  new_error->gerror =
+      (old_error->gerror != NULL) ? g_error_copy(old_error->gerror) : NULL;
 
-	return new_error;
+  return new_error;
 }
 
-static void
-fr_proc_error_free (gpointer boxed)
-{
-	FrProcError *error = boxed;
+static void fr_proc_error_free(gpointer boxed) {
+  FrProcError *error = boxed;
 
-	if (error->gerror != NULL)
-		g_error_free (error->gerror);
-	g_free (error);
+  if (error->gerror != NULL) g_error_free(error->gerror);
+  g_free(error);
 }
 
-G_DEFINE_BOXED_TYPE (FrProcError,
-		     fr_proc_error,
-		     fr_proc_error_copy,
-		     fr_proc_error_free)
+G_DEFINE_BOXED_TYPE(FrProcError, fr_proc_error, fr_proc_error_copy,
+                    fr_proc_error_free)

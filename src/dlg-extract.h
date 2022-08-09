@@ -17,7 +17,8 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301
+ * USA.
  */
 
 #ifndef DLG_EXTRACT_H
@@ -26,7 +27,7 @@
 #include "fr-archive.h"
 #include "fr-window.h"
 
-void dlg_extract (GtkWidget *widget, gpointer data);
-void dlg_extract_folder_from_sidebar (GtkWidget *widget, gpointer data);
+void dlg_extract(GtkWidget *widget, gpointer data);
+void dlg_extract_folder_from_sidebar(GtkWidget *widget, gpointer data);
 
 #endif /* DLG_EXTRACT_H */
