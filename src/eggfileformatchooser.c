@@ -97,8 +97,7 @@ static void egg_file_format_filter_info_free(gpointer boxed) {
   }
 }
 
-static gboolean egg_file_format_filter_find(gpointer key,
-                                            gpointer value G_GNUC_UNUSED,
+static gboolean egg_file_format_filter_find(gpointer key, gpointer value,
                                             gpointer data) {
   const GtkFileFilterInfo *info = data;
   const gchar *pattern = key;
@@ -216,8 +215,7 @@ static gboolean select_default_file_format(gpointer data) {
   return FALSE;
 }
 
-static gboolean find_by_format(GtkTreeModel *model,
-                               GtkTreePath *path G_GNUC_UNUSED,
+static gboolean find_by_format(GtkTreeModel *model, GtkTreePath *path,
                                GtkTreeIter *iter, gpointer data) {
   EggFileFormatSearch *search = data;
   guint id;
@@ -267,8 +265,7 @@ static gboolean accept_filename(gchar *extensions, const gchar *filename) {
   return FALSE;
 }
 
-static gboolean find_by_extension(GtkTreeModel *model,
-                                  GtkTreePath *path G_GNUC_UNUSED,
+static gboolean find_by_extension(GtkTreeModel *model, GtkTreePath *path,
                                   GtkTreeIter *iter, gpointer data) {
   EggFileFormatSearch *search = data;
 
@@ -776,8 +773,7 @@ static gchar *get_icon_name(const gchar *mime_type) {
 }
 
 void egg_file_format_chooser_add_pixbuf_formats(EggFileFormatChooser *self,
-                                                guint parent G_GNUC_UNUSED,
-                                                guint **formats) {
+                                                guint parent, guint **formats) {
   GSList *pixbuf_formats = NULL;
   GSList *iter;
   gint i;

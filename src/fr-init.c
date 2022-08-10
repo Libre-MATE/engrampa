@@ -282,8 +282,7 @@ static FrRegisteredCommand *fr_registered_command_new(GType command_type) {
   return reg_com;
 }
 
-G_GNUC_UNUSED static void fr_registered_command_ref(
-    FrRegisteredCommand *reg_com) {
+static void fr_registered_command_ref(FrRegisteredCommand *reg_com) {
   reg_com->ref++;
 }
 
@@ -333,7 +332,7 @@ static void register_command(GType command_type) {
   g_ptr_array_add(Registered_Commands, fr_registered_command_new(command_type));
 }
 
-G_GNUC_UNUSED static gboolean unregister_command(GType command_type) {
+static gboolean unregister_command(GType command_type) {
   guint i;
 
   for (i = 0; i < Registered_Commands->len; i++) {
