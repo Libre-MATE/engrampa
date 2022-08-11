@@ -95,18 +95,6 @@ typedef struct {
 
   guint16 access_flags;
   guint16 this_class; /* the index of the class the file is named after. */
-
-#if 0 /* not needed */
-	guint16         super_class;
-	guint16         interfaces_count;
-	guint16        *interfaces;
-	guint16         fields_count;
-	field_info     *fields;
-	guint16         methods_count;
-	method_info    *methods;
-	guint16         attributes_count;
-	attribute_info *attributes;
-#endif
 } JavaClassFile;
 
 static JavaClassFile *java_class_file_new(void) {

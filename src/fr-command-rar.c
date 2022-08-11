@@ -545,15 +545,6 @@ static void fr_command_rar_test(FrCommand *comm) {
 static void fr_command_rar_handle_error(FrCommand *comm, FrProcError *error) {
   GList *scan;
 
-#if 0
-	{
-		GList *scan;
-
-		for (scan = g_list_last (comm->process->err.raw); scan; scan = scan->prev)
-			g_print ("%s\n", (char*)scan->data);
-	}
-#endif
-
   if (error->type == FR_PROC_ERROR_NONE) return;
 
   /*if (error->status == 3)

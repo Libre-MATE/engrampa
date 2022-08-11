@@ -198,9 +198,6 @@ static void fr_command_unstuff_extract(FrCommand *comm, const char *from_file,
                                        GList *file_list, const char *dest_dir,
                                        gboolean overwrite, gboolean skip_older,
                                        gboolean junk_paths) {
-#if 0
-	GList *scan;
-#endif
   char *filename;
 
   fr_process_begin_command(comm->process, "unstuff");
@@ -223,12 +220,6 @@ static void fr_command_unstuff_extract(FrCommand *comm, const char *from_file,
   filename = unstuff_is_shit_with_filenames(comm->filename);
   fr_process_add_arg(comm->process, filename);
   g_free(filename);
-
-  /* FIXME it is not possible to unpack only some files */
-#if 0
-	for (scan = file_list; scan; scan = scan->next)
-		fr_process_add_arg (comm->process, scan->data);
-#endif
 
   fr_process_end_command(comm->process);
 }

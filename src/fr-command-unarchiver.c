@@ -206,13 +206,6 @@ static void fr_command_unarchiver_handle_error(FrCommand *comm,
                                                FrProcError *error) {
   GList *scan;
 
-#if 0
-	{
-		for (scan = g_list_last (comm->process->err.raw); scan; scan = scan->prev)
-			g_print ("%s\n", (char*)scan->data);
-	}
-#endif
-
   if (error->type == FR_PROC_ERROR_NONE) return;
 
   if (error->type == FR_PROC_ERROR_COMMAND_ERROR) {

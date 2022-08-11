@@ -718,21 +718,6 @@ GType fr_window_get_type(void) {
 
 /* -- window history -- */
 
-#if 0
-static void
-fr_window_history_print (FrWindow *window)
-{
-	GList *list;
-
-	debug (DEBUG_INFO, "history:\n");
-	for (list = window->priv->history; list; list = list->next)
-		g_print ("\t%s %s\n",
-			 (char*) list->data,
-			 (list == window->priv->history_current)? "<-": "");
-	g_print ("\n");
-}
-#endif
-
 static void fr_window_history_add(FrWindow *window, const char *path) {
   if ((window->priv->history_current == NULL) ||
       (g_strcmp0(path, window->priv->history_current->data) != 0)) {
@@ -1448,10 +1433,6 @@ static void fr_window_update_current_location(FrWindow *window) {
                            window->priv->archive_present);
   gtk_widget_set_sensitive(window->priv->filter_entry,
                            window->priv->archive_present);
-
-#if 0
-	fr_window_history_print (window);
-#endif
 
   path = remove_ending_separator(current_dir);
   if (get_tree_iter_from_path(window, path, NULL, &iter)) {
@@ -2614,15 +2595,7 @@ static gboolean handle_errors(FrWindow *window, FrArchive *archive,
     close_progress_dialog(window, TRUE);
     dlg_package_installer(window, archive, action);
     return FALSE;
-  }
-#if 0
-	else if (error->type == FR_PROC_ERROR_BAD_CHARSET) {
-		close_progress_dialog (window, TRUE);
-		/* dlg_ask_archive_charset (window); FIXME: implement after feature freeze */
-		return FALSE;
-	}
-#endif
-  else if (error->type == FR_PROC_ERROR_STOPPED) {
+  } else if (error->type == FR_PROC_ERROR_STOPPED) {
     /* nothing */
   } else if (error->type != FR_PROC_ERROR_NONE) {
     char *msg = NULL;
@@ -4495,48 +4468,7 @@ static gboolean fr_window_stoppable_cb(FrCommand *command, gboolean stoppable,
 
 static gboolean fr_window_fake_load(FrArchive *archive, gpointer data) {
   /* fake loads are disabled to allow exact progress dialogs (#153281) */
-
   return FALSE;
-
-#if 0
-	FrWindow *window = data;
-	gboolean  add_after_opening = FALSE;
-	gboolean  extract_after_opening = FALSE;
-	GList    *scan;
-
-	/* fake loads are used only in batch mode to avoid unnecessary
-	 * archive loadings. */
-
-	if (! window->priv->batch_mode)
-		return FALSE;
-
-	/* Check whether there is an ADD or EXTRACT action in the batch list. */
-
-	for (scan = window->priv->batch_action; scan; scan = scan->next) {
-		FRBatchAction *action;
-
-		action = (FRBatchAction *) scan->data;
-		if (action->type == FR_BATCH_ACTION_ADD) {
-			add_after_opening = TRUE;
-			break;
-		}
-		if ((action->type == FR_BATCH_ACTION_EXTRACT)
-		    || (action->type == FR_BATCH_ACTION_EXTRACT_HERE)
-		    || (action->type == FR_BATCH_ACTION_EXTRACT_INTERACT))
-		{
-			extract_after_opening = TRUE;
-			break;
-		}
-	}
-
-	/* use fake load when in batch mode and the archive type supports all
-	 * of the required features */
-
-	return (window->priv->batch_mode
-		&& ! (add_after_opening && window->priv->update_dropped_files && ! archive->command->propAddCanUpdate)
-		&& ! (add_after_opening && ! window->priv->update_dropped_files && ! archive->command->propAddCanReplace)
-		&& ! (extract_after_opening && !archive->command->propCanExtractAll));
-#endif
 }
 
 static void menu_item_select_cb(GtkMenuItem *proxy, FrWindow *window) {

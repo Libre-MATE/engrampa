@@ -282,10 +282,6 @@ static FrRegisteredCommand *fr_registered_command_new(GType command_type) {
   return reg_com;
 }
 
-static void fr_registered_command_ref(FrRegisteredCommand *reg_com) {
-  reg_com->ref++;
-}
-
 static void fr_registered_command_unref(FrRegisteredCommand *reg_com) {
   if (--(reg_com->ref) != 0) return;
 
@@ -330,23 +326,6 @@ static void register_command(GType command_type) {
   if (Registered_Commands == NULL)
     Registered_Commands = g_ptr_array_sized_new(5);
   g_ptr_array_add(Registered_Commands, fr_registered_command_new(command_type));
-}
-
-static gboolean unregister_command(GType command_type) {
-  guint i;
-
-  for (i = 0; i < Registered_Commands->len; i++) {
-    FrRegisteredCommand *command;
-
-    command = g_ptr_array_index(Registered_Commands, i);
-    if (command->type == command_type) {
-      g_ptr_array_remove_index(Registered_Commands, i);
-      fr_registered_command_unref(command);
-      return TRUE;
-    }
-  }
-
-  return FALSE;
 }
 
 static void register_commands(void) {
