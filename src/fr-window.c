@@ -562,12 +562,11 @@ static void fr_window_free_private_data(FrWindow *window) {
   g_settings_set_enum(window->priv->settings_listing, PREF_LISTING_LIST_MODE,
                       window->priv->last_list_mode);
 
-  _g_object_unref(window->priv->settings_listing);
-  _g_object_unref(window->priv->settings_ui);
-  _g_object_unref(window->priv->settings_general);
-  _g_object_unref(window->priv->settings_dialogs);
-
-  if (window->priv->settings_caja) _g_object_unref(window->priv->settings_caja);
+  g_clear_object(&window->priv->settings_listing);
+  g_clear_object(&window->priv->settings_ui);
+  g_clear_object(&window->priv->settings_general);
+  g_clear_object(&window->priv->settings_dialogs);
+  g_clear_object(&window->priv->settings_caja);
 }
 
 static void fr_window_finalize(GObject *object) {

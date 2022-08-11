@@ -125,7 +125,7 @@ static void list_command_completed(gpointer data) {
 static void fr_command_unarchiver_list(FrCommand *comm) {
   FrCommandUnarchiver *unar_comm = FR_COMMAND_UNARCHIVER(comm);
 
-  _g_object_unref(unar_comm->stream);
+  g_clear_object(&unar_comm->stream);
   unar_comm->stream = g_memory_input_stream_new();
 
   fr_process_set_out_line_func(comm->process, process_line, comm);
@@ -291,7 +291,7 @@ static void fr_command_unarchiver_finalize(GObject *object) {
   g_return_if_fail(FR_IS_COMMAND_UNARCHIVER(object));
 
   unar_comm = FR_COMMAND_UNARCHIVER(object);
-  _g_object_unref(unar_comm->stream);
+  g_clear_object(&unar_comm->stream);
 
   /* Chain up */
   if (G_OBJECT_CLASS(parent_class)->finalize)

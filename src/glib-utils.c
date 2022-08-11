@@ -36,12 +36,6 @@
 
 #define MAX_PATTERNS 128
 
-/* gobject utils*/
-
-void _g_object_unref(gpointer object) {
-  if (object != NULL) g_object_unref(object);
-}
-
 /* string utils */
 
 gboolean strchrs(const char *str, const char *chars) {

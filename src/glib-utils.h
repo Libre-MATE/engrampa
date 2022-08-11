@@ -27,10 +27,6 @@
 #include <time.h>
 #include <glib.h>
 
-/* gobject utils */
-
-void _g_object_unref(gpointer object);
-
 /* string utils */
 
 gboolean strchrs(const char *str, const char *chars);
