@@ -27,10 +27,6 @@
 #include <time.h>
 #include <glib.h>
 
-#define g_signal_handlers_disconnect_by_data(instance, data)                  \
-  g_signal_handlers_disconnect_matched((instance), G_SIGNAL_MATCH_DATA, 0, 0, \
-                                       NULL, NULL, (data))
-
 /* gobject utils */
 
 void _g_object_unref(gpointer object);
