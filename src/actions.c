@@ -695,7 +695,8 @@ void activate_action_about(GtkAction *action, gpointer gp) {
   gtk_show_about_dialog(
       GTK_WINDOW(window), "version", VERSION, "copyright",
       _("Copyright \xc2\xa9 2001–2010 Free Software Foundation, Inc.\n"
-        "Copyright \xc2\xa9 2012–2021 The MATE developers"),
+        "Copyright \xc2\xa9 2012–2021 The MATE developers\n"
+        "Copyright \xc2\xa9 2022 Libre MATE"),
       "comments",
       _("Engrampa is an archive manager for the MATE Desktop Environment."),
       "authors", authors, "documenters", documenters, "translator-credits",
