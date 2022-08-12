@@ -277,7 +277,7 @@ static void fr_archive_init(FrArchive *archive) {
   archive->priv->cancellable = g_cancellable_new();
 
   archive->process = fr_process_new();
-  g_signal_connect(G_OBJECT(archive->process), "sticky_only",
+  g_signal_connect(archive->process, "sticky_only",
                    G_CALLBACK(archive_sticky_only_cb), archive);
 }
 
@@ -849,15 +849,15 @@ static gboolean archive_working_archive_cb(FrCommand *command,
 }
 
 static void fr_archive_connect_to_command(FrArchive *archive) {
-  g_signal_connect(G_OBJECT(archive->command), "start",
-                   G_CALLBACK(action_started), archive);
-  g_signal_connect(G_OBJECT(archive->command), "done",
-                   G_CALLBACK(action_performed), archive);
-  g_signal_connect(G_OBJECT(archive->command), "progress",
+  g_signal_connect(archive->command, "start", G_CALLBACK(action_started),
+                   archive);
+  g_signal_connect(archive->command, "done", G_CALLBACK(action_performed),
+                   archive);
+  g_signal_connect(archive->command, "progress",
                    G_CALLBACK(archive_progress_cb), archive);
-  g_signal_connect(G_OBJECT(archive->command), "message",
-                   G_CALLBACK(archive_message_cb), archive);
-  g_signal_connect(G_OBJECT(archive->command), "working_archive",
+  g_signal_connect(archive->command, "message", G_CALLBACK(archive_message_cb),
+                   archive);
+  g_signal_connect(archive->command, "working_archive",
                    G_CALLBACK(archive_working_archive_cb), archive);
 }
 

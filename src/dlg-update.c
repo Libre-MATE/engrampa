@@ -322,8 +322,7 @@ gpointer dlg_update(FrWindow *window) {
   column = gtk_tree_view_column_new();
 
   renderer = gtk_cell_renderer_toggle_new();
-  g_signal_connect(G_OBJECT(renderer), "toggled",
-                   G_CALLBACK(is_selected_toggled), data);
+  g_signal_connect(renderer, "toggled", G_CALLBACK(is_selected_toggled), data);
   gtk_tree_view_column_pack_start(column, renderer, FALSE);
   gtk_tree_view_column_set_attributes(column, renderer, "active",
                                       IS_SELECTED_COLUMN, NULL);

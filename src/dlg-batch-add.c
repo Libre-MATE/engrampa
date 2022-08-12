@@ -528,7 +528,7 @@ void dlg_batch_add_files(FrWindow *window, GList *file_list) {
       gtk_builder_get_object(data->builder, "a_cancel_button"), "clicked",
       G_CALLBACK(gtk_widget_destroy),
       gtk_builder_get_object(data->builder, "dialog"));
-  g_signal_connect(G_OBJECT(data->archive_type_combo_box), "changed",
+  g_signal_connect(data->archive_type_combo_box, "changed",
                    G_CALLBACK(archive_type_combo_box_changed_cb), data);
   g_signal_connect(gtk_builder_get_object(data->builder, "a_password_entry"),
                    "notify::text", G_CALLBACK(password_entry_notify_text_cb),

@@ -188,9 +188,9 @@ static void fr_command_set_process(FrCommand *comm, FrProcess *process) {
 
   g_object_ref(G_OBJECT(process));
   comm->process = process;
-  g_signal_connect(G_OBJECT(comm->process), "start",
+  g_signal_connect(comm->process, "start",
                    G_CALLBACK(fr_command_start), comm);
-  g_signal_connect(G_OBJECT(comm->process), "done", G_CALLBACK(fr_command_done),
+  g_signal_connect(comm->process, "done", G_CALLBACK(fr_command_done),
                    comm);
 }
 

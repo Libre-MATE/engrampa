@@ -276,8 +276,8 @@ void show_new_archive_dialog(FrWindow *window, const char *archive_name) {
   else
     data = dlg_new(window);
 
-  g_signal_connect(G_OBJECT(data->dialog), "response",
-                   G_CALLBACK(new_file_response_cb), data);
+  g_signal_connect(data->dialog, "response", G_CALLBACK(new_file_response_cb),
+                   data);
   gtk_window_present(GTK_WINDOW(data->dialog));
 }
 
@@ -317,7 +317,7 @@ static void open_file_response_cb(GtkWidget *w, int response,
 
   if (fr_window_archive_is_present(window))
     window = (FrWindow *)fr_window_new();
-  g_signal_connect(G_OBJECT(window), "archive_loaded",
+  g_signal_connect(window, "archive_loaded",
                    G_CALLBACK(window_archive_loaded_cb), file_sel);
   fr_window_archive_open(window, uri, GTK_WINDOW(file_sel));
 
@@ -355,8 +355,8 @@ void activate_action_open(GtkAction *action, gpointer data) {
 
   g_object_set_data(G_OBJECT(file_sel), "fr_window", window);
 
-  g_signal_connect(G_OBJECT(file_sel), "response",
-                   G_CALLBACK(open_file_response_cb), file_sel);
+  g_signal_connect(file_sel, "response", G_CALLBACK(open_file_response_cb),
+                   file_sel);
 
   gtk_window_set_modal(GTK_WINDOW(file_sel), TRUE);
   gtk_widget_show(file_sel);
@@ -429,8 +429,8 @@ void activate_action_save_as(GtkAction *action, gpointer callback_data) {
   }
 
   data = dlg_save_as(window, archive_name);
-  g_signal_connect(G_OBJECT(data->dialog), "response",
-                   G_CALLBACK(save_file_response_cb), data);
+  g_signal_connect(data->dialog, "response", G_CALLBACK(save_file_response_cb),
+                   data);
   gtk_window_present(GTK_WINDOW(data->dialog));
 
   g_free(archive_name);

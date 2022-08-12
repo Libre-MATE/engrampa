@@ -356,8 +356,7 @@ void _gtk_error_dialog_run(GtkWindow *parent, const gchar *main_message,
                               GTK_RESPONSE_CANCEL, NULL);
   g_free(message);
 
-  g_signal_connect(G_OBJECT(d), "response", G_CALLBACK(gtk_widget_destroy),
-                   NULL);
+  g_signal_connect(d, "response", G_CALLBACK(gtk_widget_destroy), NULL);
 
   gtk_widget_show(d);
 }
@@ -476,8 +475,7 @@ void show_help_dialog(GtkWindow *parent, const char *section) {
         NULL);
     gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_OK);
 
-    g_signal_connect(G_OBJECT(dialog), "response",
-                     G_CALLBACK(gtk_widget_destroy), NULL);
+    g_signal_connect(dialog, "response", G_CALLBACK(gtk_widget_destroy), NULL);
 
     gtk_window_set_resizable(GTK_WINDOW(dialog), FALSE);
 

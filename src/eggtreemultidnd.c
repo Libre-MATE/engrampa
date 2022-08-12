@@ -358,19 +358,19 @@ static gboolean egg_tree_multi_drag_button_press_event(GtkWidget *widget,
 
       if (priv_data->motion_notify_handler == 0) {
         priv_data->motion_notify_handler = g_signal_connect(
-            G_OBJECT(tree_view), "motion_notify_event",
+            tree_view, "motion_notify_event",
             G_CALLBACK(egg_tree_multi_drag_motion_event), NULL);
       }
 
       if (priv_data->button_release_handler == 0) {
         priv_data->button_release_handler = g_signal_connect(
-            G_OBJECT(tree_view), "button_release_event",
+            tree_view, "button_release_event",
             G_CALLBACK(egg_tree_multi_drag_button_release_event), NULL);
       }
 
       if (priv_data->drag_data_get_handler == 0) {
         priv_data->drag_data_get_handler = g_signal_connect(
-            G_OBJECT(tree_view), "drag_data_get",
+            tree_view, "drag_data_get",
             G_CALLBACK(egg_tree_multi_drag_drag_data_get), NULL);
       }
     }
@@ -385,6 +385,6 @@ static gboolean egg_tree_multi_drag_button_press_event(GtkWidget *widget,
 
 void egg_tree_multi_drag_add_drag_support(GtkTreeView *tree_view) {
   g_return_if_fail(GTK_IS_TREE_VIEW(tree_view));
-  g_signal_connect(G_OBJECT(tree_view), "button_press_event",
+  g_signal_connect(tree_view, "button_press_event",
                    G_CALLBACK(egg_tree_multi_drag_button_press_event), NULL);
 }

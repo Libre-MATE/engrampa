@@ -339,7 +339,7 @@ static DlgNewData *dlg_new_archive(FrWindow *window, int *supported_types,
       "on_n_volume_checkbutton_toggled", G_CALLBACK(volume_toggled_cb), NULL);
   gtk_builder_connect_signals(builder, data);
 
-  g_signal_connect(G_OBJECT(data->format_chooser), "selection-changed",
+  g_signal_connect(data->format_chooser, "selection-changed",
                    G_CALLBACK(format_chooser_selection_changed_cb), data);
 
   g_signal_connect_after(GET_WIDGET("other_oprtions_alignment"), "unmap",
