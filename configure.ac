@@ -6,6 +6,7 @@ AC_INIT([engrampa],
         [engrampa],
         [https://github.com/Libre-MATE/engrampa])
 AC_PREREQ(2.61)
+AC_COPYRIGHT([Copyright (C) 2022 Libre MATE])
 AM_INIT_AUTOMAKE([1.9 foreign dist-xz no-dist-gzip check-news])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
