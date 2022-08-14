@@ -4738,8 +4738,8 @@ static void fr_window_construct(FrWindow *window) {
                    G_CALLBACK(fr_window_progress_cb), window);
   g_signal_connect(window->archive, "message", G_CALLBACK(fr_window_message_cb),
                    window);
-  g_signal_connect(window->archive, "stoppable", fr_window_stoppable_cb,
-                   window);
+  g_signal_connect(window->archive, "stoppable",
+                   G_CALLBACK(fr_window_stoppable_cb), window);
   g_signal_connect(window->archive, "working_archive",
                    G_CALLBACK(fr_window_working_archive_cb), window);
 
