@@ -282,14 +282,6 @@ static FrRegisteredCommand *fr_registered_command_new(GType command_type) {
   return reg_com;
 }
 
-static void fr_registered_command_unref(FrRegisteredCommand *reg_com) {
-  if (--(reg_com->ref) != 0) return;
-
-  g_ptr_array_foreach(reg_com->caps, (GFunc)g_free, NULL);
-  g_ptr_array_free(reg_com->caps, TRUE);
-  g_free(reg_com);
-}
-
 static FrCommandCaps fr_registered_command_get_capabilities(
     FrRegisteredCommand *reg_com, const char *mime_type) {
   guint i;
