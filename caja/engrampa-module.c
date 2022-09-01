@@ -34,9 +34,10 @@
 
 void caja_module_initialize(GTypeModule *module) {
   caja_fr_register_type(module);
-
+#ifdef ENABLE_NLS
   bindtextdomain(GETTEXT_PACKAGE, MATELOCALEDIR);
   bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+#endif /* ENABLE_NLS */
 }
 
 void caja_module_shutdown(void) {}
